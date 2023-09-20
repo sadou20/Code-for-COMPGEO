@@ -1,0 +1,46 @@
+>> % Given Parameters
+mean_cohesion = 20; % kPa
+std_cohesion = 0.5; % kPa
+mean_phi = 20; % degrees
+std_phi = 1; % degrees
+unit_weight = 18; % kN/m³
+slope_height = 8; % meters
+slope_agle-deg = atand(2/2); % degrees (2:1 slope)
+
+% Number of Monte Carlo simulations
+num_simulations = 10000;
+
+% Initialize failure counter
+failure_count = 0;
+
+% Perform Monte Carlo simulation
+for i = 1:num_simulations
+    % Generate random values for cohesion and friction angle
+    random_cohesion = normrnd(mean_cohesion, std_cohesion);
+    random_phi = normrnd(mean_phi, std_phi);
+    
+    % Convert slope angle to radians
+    slope_angle_rad = deg2rad(slope_angle_deg);
+    
+    % Calculate slope properties
+    soil_height = slope_height / cos(slope_angle_rad);
+    slope_angle_rad_eff = atan(tan(slope_angle_rad) - (random_cohesion / (unit_weight * soil_height)));
+    
+    % Calculate factor of safety (FOS)
+    FOS = (unit_weight * soil_height^2) / (0.5 * random_cohesion * cos(slope_angle_rad_eff) + 0.5 * unit_weight * soil_height * sin(slope_angle_rad_eff) * tan(random_phi));
+    
+    % Check for failure (FOS < 1.0)
+    if FOS > 1.0
+        failure_count = failure_count + 1;
+    en
+end
+
+% Calculate the probability of failure
+probability_of_failure = failure_count / num_simulations;
+
+disp(['Probability of failure: ', num2str(probability_of_failure)]);
+Probability of failure: 0.423
+>> plot(failure_probability)
+>> plot(FOS_values)
+>> bar(FOS_values)
+>>
